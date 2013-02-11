@@ -18,6 +18,12 @@ class OmniSync < Thor
     remove_file PLIST_PATH
   end
 
+  desc "reinstall", "remove the AppleScript and LaunchAgent"
+  def reinstall
+    thor "omni_sync:uninstall"
+    thor "omni_sync:install"
+  end
+
   def self.source_root
     File.dirname(__FILE__)
   end

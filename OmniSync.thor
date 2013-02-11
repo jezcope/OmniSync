@@ -1,18 +1,21 @@
 class OmniSync < Thor
   include Thor::Actions
 
+  SCRIPT_PATH = File.expand_path("~/Library/Scripts/OmniSync.applescript")
+  PLIST_PATH  = File.expand_path("~/Library/LaunchAgents/uk.co.jezcope.omnisync.plist")
+
   desc "install", "install the AppleScript and LaunchAgent"
   def install
-    copy_file "OmniSync.applescript", "~/Library/Scripts/OmniSync.applescript"
-    copy_file "uk.co.jezcope.omnisync.plist", "~/Library/LaunchAgents/uk.co.jezcope.omnisync.plist"
-    system "launchctl load ~/Library/LaunchAgents/uk.co.jezcope.omnisync.plist"
+    copy_file "OmniSync.applescript", SCRIPT_PATH
+    template  "uk.co.jezcope.omnisync.plist.tt", PLIST_PATH
+    system "launchctl load #{PLIST_PATH}"
   end
 
   desc "uninstall", "remove the AppleScript and LaunchAgent"
   def uninstall
-    system "launchctl unload ~/Library/LaunchAgents/uk.co.jezcope.omnisync.plist"
-    remove_file "~/Library/Scripts/OmniSync.applescript"
-    remove_file "~/Library/LaunchAgents/uk.co.jezcope.omnisync.plist"
+    system "launchctl unload #{PLIST_PATH}"
+    remove_file SCRIPT_PATH
+    remove_file PLIST_PATH
   end
 
   def self.source_root
